@@ -1,0 +1,54 @@
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import authRoutes from './routes/auth.js';
+import { connectDB } from './config/db.js';
+import sequelize from './config/db.js';
+
+dotenv.config();
+const app = express();
+
+// CORS simples
+const corsOptions = {
+  origin: 'http://localhost:5173',
+  credentials: true
+};
+
+app.use(cors(corsOptions));
+
+// Body Parser
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Debug
+app.use((req, res, next) => {
+  console.log(`📨 ${req.method} ${req.path}`);
+  next();
+});
+
+// Rotas
+app.use('/api/auth', authRoutes);
+
+// Health check
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'OK' });
+});
+
+// Conectar banco e iniciar servidor
+const startServer = async () => {
+  try {
+    await connectDB();
+    await sequelize.sync();
+    console.log('✅ DB synced');
+    
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+      console.log(`🚀 Server rodando em http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error('❌ Erro ao iniciar servidor:', error);
+    process.exit(1);
+  }
+};
+
+startServer();

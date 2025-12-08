@@ -1,0 +1,36 @@
+:root {
+  /* tamanhos */
+  --font-size-h1: 48px;
+  --font-size-h2: 32px;
+  --font-size-h3: 24px;
+  --font-size-body: 16px;
+  --font-size-sm: 14px;
+
+  
+   /* Cores */
+  --color-primary: #1976d2;
+  --color-text: #333333;
+  
+  /* tamanhos */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+}
+
+/* Aplicar estilos padrão */
+h1 {
+  font-size: var(--font-size-h1);
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+}
+
+h3 {
+  font-size: var(--font-size-h3);
+}
+
+body {
+  font-size: var(--font-size-body);
+  color: var(--color-text);
+  line-height: var(--line-height-normal);
+}
