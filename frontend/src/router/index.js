@@ -11,6 +11,7 @@ import Profile from "../pages/Profile.vue";
 import Ranking from "../pages/Ranking.vue";
 import Clubs from "../pages/Clubs.vue";
 import CreateClubs from "../pages/CreateClubs.vue";
+import Logout from "../pages/Logout.vue";
 import path from "path";
 
 const routes = [
@@ -25,6 +26,7 @@ const routes = [
     {path: '/ranking', name: 'Ranking', component: Ranking},
     {path: '/clubs', name: 'Clubs', component: Clubs},
     {path: '/createclubs', name: 'CreateClubs', component: CreateClubs},
+    {path: '/logout', name: 'Logout', component: Logout},
 ]
 const router = createRouter({
     history: createWebHistory(),

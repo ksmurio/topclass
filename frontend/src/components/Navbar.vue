@@ -8,6 +8,7 @@
             <v-list-item title="Ranking" aria-label="go to ranking" :to="{ path:'/ranking'}"></v-list-item>
             <v-list-item title="My Notes" aria-label="go to my notes" :to="{ path:'/mynotes'}"></v-list-item>
             <v-list-item title="profile" aria-label="go to profile" :to="{ path:'/profile'}"></v-list-item>
+            <v-list-item title="logout" aria-label="go to logout" :to="{ path:'/logout'}"></v-list-item>
         </v-list>
     </v-navigation-drawer>
 

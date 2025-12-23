@@ -1,14 +1,22 @@
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
 
-const verifyToken = (req, res, next) => {
+export const verify_Token = (req, res, next) => {
   try {
-    const token = localStorage.getItem("token");
+    const authHeader = req.headers.authorization || '';
+    const token = authHeader.split(' ')[1];
 
     if (!token) {
-      message.value = "You must be logged in";
-      return;
+      return res.status(401).json({ success: false, message: 'No token provided' });
     }
-  } catch (error) {
-    console.error("Error verifying token:", error);
+
+    const secret = process.env.JWT_SECRET || 'default_secret_key';
+    const decoded = jwt.verify(token, secret);
+
+    req.user = decoded;
+    return next();
+  }
+  catch (error) {
+    console.error('Error verifying token:', error);
+    return res.status(401).json({ success: false, message: 'Invalid token' });
   }
 };
