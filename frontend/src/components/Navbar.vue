@@ -26,6 +26,11 @@ export default {
         return {
             drawer: false
         }
+    },
+    watch: {
+        $route() {
+            this.drawer = false;
+        }
     }
 }
 </script>

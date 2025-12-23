@@ -1,8 +1,8 @@
 <template>
     <div>
         <v-container class="v-card-container register-container">
-            <v-row>
-                <v-col class="mx-md-auto v-col-md-8 v-col-lg-6">
+            <v-row class="justify-center align-center">
+                <v-col cols="6">
                     <v-card class="text-center">
                         <form @submit.prevent="register">
                             <v-card-text>

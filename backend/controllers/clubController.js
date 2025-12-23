@@ -64,4 +64,9 @@ const create_club = async (req, res) => {
   }
 };
 
+const search_club = async (req, res) => {
+
+  
+}
+
 export { create_club };
