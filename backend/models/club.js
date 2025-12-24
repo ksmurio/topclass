@@ -52,7 +52,7 @@ const Club = sequelize.define("Club", {
 });
 
 // Associações
-Club.belongsTo(User, { foreignKey: 'creator_id', as: 'creator' }); //As associações declaram o relacionamento entre modelos, mas só são usadas quando você pede com include.
-User.hasMany(Club, { foreignKey: 'creator_id', as: 'clubs' });
+Club.belongsToMany(User, {through: 'user_clubs',foreignKey: 'club_id',otherKey: 'user_id',as: 'members'
+});
 
 export default Club;
