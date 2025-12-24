@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
-import User from './user.js';
+
 
 const Club = sequelize.define("Club", {
   id: {
@@ -23,10 +23,6 @@ const Club = sequelize.define("Club", {
   creator_id: {
     type: DataTypes.UUID,
     allowNull: false,
-    references: {
-      model: User,
-      key: 'id'
-    }
   },
   club_uuid: {
     type: DataTypes.STRING(36),
@@ -49,10 +45,6 @@ const Club = sequelize.define("Club", {
   tableName: 'clubs',
   timestamps: false,
   underscored: true
-});
-
-// Associações
-Club.belongsToMany(User, {through: 'user_clubs',foreignKey: 'club_id',otherKey: 'user_id',as: 'members'
 });
 
 export default Club;

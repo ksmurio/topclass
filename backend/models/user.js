@@ -45,6 +45,4 @@ const User = sequelize.define('User', {
   }
 });
 
-User.belongsToMany(Club, { through: "user_clubs",foreignKey: "user_id",otherKey: "club_id",as: "joinedClubs" });
-
 export default User;
