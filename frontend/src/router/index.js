@@ -12,7 +12,7 @@ import Ranking from "../pages/Ranking.vue";
 import Clubs from "../pages/Clubs.vue";
 import CreateClubs from "../pages/CreateClubs.vue";
 import Logout from "../pages/Logout.vue";
-import path from "path";
+import club from "../pages/Club.vue";
 
 const routes = [
     {path: '/',name: 'Welcome', component: Welcome},
@@ -27,6 +27,7 @@ const routes = [
     {path: '/clubs', name: 'Clubs', component: Clubs},
     {path: '/createclubs', name: 'CreateClubs', component: CreateClubs},
     {path: '/logout', name: 'Logout', component: Logout},
+    {path: '/club/:id', name: 'club', component: club}
 ]
 const router = createRouter({
     history: createWebHistory(),

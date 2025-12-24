@@ -8,7 +8,7 @@ import sequelize from './config/db.js';
 dotenv.config();
 const app = express();
 
-// CORS simples
+// CORS é uma abreviação de Cross-Origin Resource Sharing. É um mecanismo que usa cabeçalhos HTTP adicionais para permitir que um user agent (geralmente um navegador) obtenha permissão para acessar recursos selecionados de um servidor, em um domínio diferente daquele do qual o primeiro recurso foi servido.
 const corsOptions = {
   origin: 'http://localhost:5173',
   credentials: true
@@ -16,17 +16,16 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// Body Parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Debug
+
 app.use((req, res, next) => {
   console.log(`📨 ${req.method} ${req.path}`);
   next();
 });
 
-// Rotas
+
 app.use('/api/auth', authRoutes);
 
 // Health check
@@ -34,7 +33,6 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK' });
 });
 
-// Conectar banco e iniciar servidor
 const startServer = async () => {
   try {
     await connectDB();

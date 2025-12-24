@@ -1,4 +1,4 @@
-import Club from "../models/clubs.js";
+import Club from "../models/club.js";
 import User from "../models/user.js";
 import jwt from "jsonwebtoken";
 
@@ -64,12 +64,12 @@ const create_club = async (req, res) => {
   }
 };
 
-const show_clubs = async (req,res) => {
+const show_club = async (req,res) => {
     try{
        const token = req.headers.authorization?.split(" ")[1];
 
         if(!token){
-            return res.status(401).json({sucess:false, message: 'No token provided'});
+            return res.status(401).json({success:false, message: 'No token provided'});
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -79,11 +79,11 @@ const show_clubs = async (req,res) => {
             where : { creator_id : user_Id}
         });
 
-        res.status(200).json({sucess:true, message: 'Clubs searching successfully', clubs});
+        res.status(200).json({success:true, message: 'Clubs searching successfully', clubs});
     }catch(error){
         console.error("Error searching for clubs:", error);
-        res.status(500).json({sucess:false, message: "Error searching for clubs: " + error.message});
+        res.status(500).json({success:false, message: "Error searching for clubs: " + error.message});
     }
 }
 
-export { create_club, show_clubs };
+export { create_club, show_club };
