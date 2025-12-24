@@ -64,26 +64,50 @@ const create_club = async (req, res) => {
   }
 };
 
-const show_club = async (req,res) => {
-    try{
-       const token = req.headers.authorization?.split(" ")[1];
+const show_clubs = async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
 
-        if(!token){
-            return res.status(401).json({success:false, message: 'No token provided'});
-        }
+    if (!token) {
+      return res.status(401).json({ success: false, message: "No token provided" });
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user_Id = decoded.id;
-
-        const clubs = await Club.findAll({
-            where : { creator_id : user_Id}
-        });
-
-        res.status(200).json({success:true, message: 'Clubs searching successfully', clubs});
-    }catch(error){
-        console.error("Error searching for clubs:", error);
-        res.status(500).json({success:false, message: "Error searching for clubs: " + error.message});
     }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user_Id = decoded.id;
+
+    const clubs = await Club.findAll({
+      where: { creator_id: user_Id },
+    });
+
+    res.status(200).json({ success: true, message: "Clubs searching successfully", clubs });
+  
+  } catch (error) {
+    console.error("Error searching for clubs:", error);
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Error searching for clubs: " + error.message,
+      });
+  }
+};
+
+const load_club = async (req, res) => {
+   const clubId = req.params.id;
+
+   try{
+    const club = await Club.findByPk(clubId);
+
+    if(!club){
+      return res.status(404).json({success:false, message: "Club not found"});
+    }
+
+    return res.status(200).json({success:true, message: "Club loaded successfully", club});
+   }catch(error){
+    console.error("Error loading club:", error);
+    res.status(500).json({success:false, message: "Error loading club: " + error.message});
+   }
 }
 
-export { create_club, show_club };
+export { create_club, show_clubs, load_club };

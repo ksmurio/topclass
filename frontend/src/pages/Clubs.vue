@@ -19,12 +19,12 @@
                 <h2>Your clubs</h2>
             </v-col>
              
-            <v-col v-for="content in club" :key="club.id" cols="12" sm="6" md="4" lg="3">
+            <v-col v-for="club in clubs" :key="clubs.id" cols="12" sm="6" md="4" lg="3">
                 <v-card>
-                    <v-card-title>{{ content.name }}</v-card-title>
-                    <v-card-subtitle>{{ content.description }}</v-card-subtitle>
+                    <v-card-title>{{ club.name }}</v-card-title>
+                    <v-card-subtitle>{{ club.description }}</v-card-subtitle>
                     <v-card-actions>
-                        <v-btn :to="`/club/${content.id}`" color="#00268f" variant="flat" block>VIEW CLUB</v-btn>
+                        <v-btn :to="`/club/${club.id}`" color="#00268f" variant="flat" block>VIEW CLUB</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -38,9 +38,9 @@ import axios from 'axios';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const club = ref([]);
+const clubs = ref([]);
 
-const show_Club = async () => {
+const show_Clubs = async () => {
     try {
         const token = localStorage.getItem('token');
 
@@ -58,9 +58,8 @@ const show_Club = async () => {
         console.log("Response:", response.data);
 
         if (response.data.success) {
-            club.value = response.data.clubs;
-             await nextTick();
-            console.log("Clubs:", club.value);
+            clubs.value = response.data.clubs;
+            console.log("Clubs:", clubs.value);
         }
     } catch (error) {
         console.error('Error searching for clubs:', error);
@@ -68,7 +67,7 @@ const show_Club = async () => {
 };
 
 onMounted(() => {
-    show_Club();
+    show_Clubs();
 });
 
 </script>

@@ -1,13 +1,14 @@
 import express from 'express';
 import { register } from '../controllers/authController.js';
 import { login } from '../controllers/authController.js';
-import { create_club, show_club } from '../controllers/clubController.js';
+import { create_club, show_clubs, load_club } from '../controllers/clubController.js';
 
 const router = express.Router();
 
 router.post('/register', register);
 router.post('/login', login);
 router.post('/create_club', create_club);
-router.get('/club', show_club);
+router.get('/clubs', show_clubs);
+router.get('/club/:id', load_club);
 
 export default router;
