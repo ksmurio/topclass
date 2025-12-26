@@ -13,6 +13,7 @@ import Clubs from "../pages/Clubs.vue";
 import CreateClubs from "../pages/CreateClubs.vue";
 import Logout from "../pages/Logout.vue";
 import club from "../pages/Club.vue";
+import AddAverage from "../pages/AddAverage.vue";
 
 const routes = [
     {path: '/',name: 'Welcome', component: Welcome},
@@ -27,7 +28,8 @@ const routes = [
     {path: '/clubs', name: 'Clubs', component: Clubs},
     {path: '/createclubs', name: 'CreateClubs', component: CreateClubs},
     {path: '/logout', name: 'Logout', component: Logout},
-    {path: '/club/:id', name: 'club', component: club}
+    {path: '/club/:id', name: 'club', component: club},
+    {path: '/AddAverage', name: 'AddAverage', component: AddAverage},
 ]
 const router = createRouter({
     history: createWebHistory(),

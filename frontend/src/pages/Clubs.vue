@@ -10,8 +10,9 @@
                     Create clubs
                 </v-btn>
             </v-col>
-            <v-col cols="12">
+            <v-col cols="12" class="mt-4 d-flex" >
                 <v-text-field placeholder="Serch for clubs name" variant="outlined"></v-text-field>
+                <v-btn color="#00268f" @click="searchClubs">Search</v-btn>
             </v-col>
         </v-row>
          <v-row>
