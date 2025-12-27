@@ -10,16 +10,16 @@
                     Create clubs
                 </v-btn>
             </v-col>
-            <v-col cols="12" class="mt-4 d-flex" >
-                <v-text-field placeholder="Serch for clubs name" variant="outlined"></v-text-field>
-                <v-btn color="#00268f" @click="searchClubs">Search</v-btn>
+            <v-col cols="12" class="mt-4 d-flex">
+                <v-text-field placeholder="Search for clubs name" variant="outlined" v-model="clubCode"></v-text-field>
+                <v-btn color="#00268f" @click="load_club(clubCode)">Search</v-btn>
             </v-col>
         </v-row>
-         <v-row>
+        <v-row>
             <v-col cols="12">
                 <h2>Your clubs</h2>
             </v-col>
-             
+
             <v-col v-for="club in clubs" :key="clubs.id" cols="12" sm="6" md="4" lg="3">
                 <v-card>
                     <v-card-title>{{ club.name }}</v-card-title>
@@ -34,7 +34,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted,  nextTick } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 
@@ -66,6 +66,32 @@ const show_Clubs = async () => {
         console.error('Error searching for clubs:', error);
     }
 };
+
+const load_club = async (clubCode) => {
+    try {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            router.push('/login');
+            return;
+        }
+
+        const response = await axios.get(`http://localhost:3000/api/auth/club/${clubCode}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if(response.data.success){
+            router.push(`/club/${clubCode}`);
+        }
+
+        console.log("Response:", response.data);
+
+    }catch(error){
+        console.error('Error loading club:', error);
+    }
+}
 
 onMounted(() => {
     show_Clubs();

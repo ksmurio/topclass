@@ -110,4 +110,4 @@ const load_club = async (req, res) => {
    }
 }
 
-export { create_club, show_clubs, load_club };
+export { create_club, show_clubs, load_club};
