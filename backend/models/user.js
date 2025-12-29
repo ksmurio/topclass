@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 
 const User = sequelize.define('User', {
   id: {
-    type: DataTypes.CHAR(36),
+    type: DataTypes.UUID,
     primaryKey: true,
     defaultValue: DataTypes.UUIDV4
   },
@@ -37,7 +37,7 @@ const User = sequelize.define('User', {
   }
 }, {
   tableName: 'user',
-  timestamps: false,
+  timestamps: false, 
   hooks: {
     beforeCreate: async (user) => {
       user.password = await bcrypt.hash(user.password, 10);

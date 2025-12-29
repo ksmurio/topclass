@@ -1,17 +1,32 @@
-export default function initAssociations(db) {
-  if (!db.User || !db.Club) return;
+import User from './user.js';
+import Club from './club.js';
 
-  db.User.belongsToMany(db.Club, {
+const initAssociations = () => {
+  User.belongsToMany(Club, {
     through: 'user_clubs',
     foreignKey: 'user_id',
     otherKey: 'club_id',
-    as: 'joinedClubs'
+    as: 'joinedClubs', 
+    timestamps: false,
   });
 
-  db.Club.belongsToMany(db.User, {
+  Club.belongsToMany(User, {
     through: 'user_clubs',
     foreignKey: 'club_id',
     otherKey: 'user_id',
-    as: 'members'
+    as: 'members',
+    timestamps: false,
   });
-}
+
+  Club.belongsTo(User, {
+    foreignKey: 'creator_id',
+    as: 'creator'
+  });
+
+  User.hasMany(Club, {
+    foreignKey: 'creator_id',
+    as: 'createdClubs' 
+  });
+};
+
+export {initAssociations};

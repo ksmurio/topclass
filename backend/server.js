@@ -29,8 +29,7 @@ app.use((req, res, next) => {
 
 app.use('/api/auth', authRoutes);
 
-// Health check
-app.get('/api/health', (req, res) => {
+app.get('/api/health', (res) => {
   res.json({ status: 'OK' });
 });
 
@@ -39,13 +38,13 @@ const startServer = async () => {
     await connectDB();
     await sequelize.sync();
     console.log('✅ DB synced');
-    
+        
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
-      console.log(`🚀 Server rodando em http://localhost:${PORT}`);
+      console.log(`Server rodando em http://localhost:${PORT}`);
     });
   } catch (error) {
-    console.error('❌ Erro ao iniciar servidor:', error);
+    console.error('Erro ao iniciar servidor:', error);
     process.exit(1);
   }
 };

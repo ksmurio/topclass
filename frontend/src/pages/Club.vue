@@ -13,6 +13,11 @@
         </v-row>
         <v-row>
             <v-col cols="12">
+                <v-btn v-if="isMember==false">Join in club</v-btn>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col cols="12">
                 <v-table>
                     <thead>
                         <tr>
@@ -23,11 +28,12 @@
                         </tr>
                     </thead>
                     <tbody v-if="club">
-                        <tr v-for="(u) in members" :key="u.id || u._id || i">
-                            <td>{{ u.name || u.username || u.email }}</td>
-                            <td>{{ u.schoolAverage ?? '-' }}</td>
+                        <tr v-for="(member) in members" :key="member.id || member._id || i">
+                            <td></td>
+                            <td>{{member.username }}</td>
+                            <td>{{ member.schoolAverage ?? '-' }}</td>
                             <td>
-                                <v-btn small color="primary" @click="goToMember(u)">Ver</v-btn>
+                                <v-btn size="small" color="primary">Ver</v-btn>
                             </td>
                         </tr>
                         <tr v-if="members.length === 0">
@@ -41,47 +47,43 @@
 </template>
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute} from 'vue-router';
 import axios from 'axios';
 
 const route = useRoute();
-const router = useRouter();
 const club = ref(null);
+const isMember = ref(false);
 
-const members = computed(() => { //atualiza o valor de members toda vez que club mudar 
+const members = computed(() => { 
     return club.value?.members ?? club.value?.joinedCLubs ?? club.value?.users ?? [];
 });
 
 const load_club = async() => {
     try {
         const clubId = route.params.id;
+        const token = localStorage.getItem('token');
 
         if (!clubId) {
             console.error("No club ID provided in route parameters.");
             return;
         }
 
-        const response = await axios.get(`http://localhost:3000/api/auth/club/${clubId}`);
-        
+        const response = await axios.get(`http://localhost:3000/api/auth/club/${clubId}`,{
+            headers:{
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
         if(response.data.success){
             club.value = response.data.club ?? response.data;
-            if (response.data.members) {
-                club.value.members = response.data.members;
-            }
+            isMember.value = response.data.isMember;
         }
+
     } catch (error) {
         console.error("Error loading club:", error);
     }
 };
 
-const goToMember = (m) => {
-    const id = m.id || m._id;
-    if (id) {
-        router.push({ name: 'MemberProfile', params: { id } });
-    } else {
-        console.log('Membro sem id:', m);
-    }
-};
 
 onMounted(() => {
     load_club();

@@ -21,9 +21,7 @@
                                 label="Password" 
                                 v-model="password" 
                                 :rules="[() => !!password || 'This field is required']" 
-                                :type="showPassword ? 'text' : 'password'"
-                                :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
-                                @click:append-inner="showPassword = !showPassword"
+                                type="password"
                                 required>
                             </v-text-field>
                         </v-card-text>

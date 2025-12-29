@@ -1,26 +1,17 @@
+import sequelize from '../config/db.js';
 import User from './user.js';
 import Club from './club.js';
-// Importe outros modelos aqui
+import { initAssociations } from './associations.js';
 
-// Defina todas as associações
-Club.belongsTo(User, {
-  foreignKey: 'creator_id',
-  as: 'creator'
-});
+const db = {
+  User,
+  Club,
+  sequelize
+};
 
-Club.belongsToMany(User, {
-  through: 'user_clubs',
-  foreignKey: 'club_id',
-  otherKey: 'user_id',
-  as: 'members'
-});
+initAssociations();
 
-User.belongsToMany(Club, {
-  through: 'user_clubs',
-  foreignKey: 'user_id',
-  otherKey: 'club_id',
-  as: 'clubs'
-});
+console.log('Modelos e associações carregados!');
 
-// Exporte todos os modelos juntos
-export { User, Club };
+export default db;
+export { User, Club, sequelize };

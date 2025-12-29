@@ -25,7 +25,7 @@ const Club = sequelize.define("Club", {
     allowNull: false,
   },
   club_uuid: {
-    type: DataTypes.STRING(36),
+    type: DataTypes.UUID,
     unique: true,
     defaultValue: DataTypes.UUIDV4 
   },
@@ -43,7 +43,7 @@ const Club = sequelize.define("Club", {
   }
 }, {
   tableName: 'clubs',
-  timestamps: false,
+  timestamps: false, 
   underscored: true
 });
 
