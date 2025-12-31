@@ -47,8 +47,7 @@
                             </v-card-text>
 
                             <v-card-actions class="d-flex flex-column justify-center">
-                                <v-btn size="large" type="submit" color="blue-darken-4" class="text-white"
-                                    variant="flat">
+                                <v-btn size="large" type="submit" class="text-white" variant="flat">
                                     Create Club
                                 </v-btn>
                                 <p v-if="message" class="mt-3">{{ message }}</p>
@@ -93,7 +92,7 @@ const register = async () => {
             isPrivate: isPrivate.value
         }, {
             headers: {
-                'Authorization': `Bearer ${token}` 
+                'Authorization': `Bearer ${token}`
             }
         });
 

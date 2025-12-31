@@ -36,9 +36,6 @@
                   label="Password" 
                   v-model="password"
                   :rules="[() => !!password || 'This field is required']" 
-                  :type="showPassword ? 'text' : 'password'"
-                  :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
-                  @click:append-inner="showPassword = !showPassword"
                   required>
                 </v-text-field>
               </v-card-text>
@@ -89,12 +86,10 @@ const register = async () => {
     if (res.data.success) {
       message.value = res.data.message;
 
-      // Redireciona para welcome após 2 segundos
       setTimeout(() => {
         router.push('/');
       }, 2000);
 
-      // Limpa os campos
       name.value = '';
       username.value = '';
       email.value = '';

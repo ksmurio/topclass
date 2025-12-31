@@ -3,13 +3,13 @@ import User from './user.js';
 import Club from './club.js';
 import { initAssociations } from './associations.js';
 
+initAssociations();
+
 const db = {
   User,
   Club,
   sequelize
 };
-
-initAssociations();
 
 console.log('Modelos e associações carregados!');
 

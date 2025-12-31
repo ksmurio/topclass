@@ -12,15 +12,27 @@
             </v-col>
             <v-col cols="12" class="mt-4 d-flex">
                 <v-text-field placeholder="Search for clubs name" variant="outlined" v-model="clubCode"></v-text-field>
-                <v-btn color="#00268f" @click="load_club(clubCode)">Search</v-btn>
+                <v-btn @click="load_club(clubCode)">Search</v-btn>
             </v-col>
         </v-row>
         <v-row>
             <v-col cols="12">
-                <h2>Your clubs</h2>
+                <h2>Your created clubs</h2>
             </v-col>
 
-            <v-col v-for="club in clubs" :key="clubs.id" cols="12" sm="6" md="4" lg="3">
+            <v-col v-for="club in clubsCreated" :key="club.id" cols="12" sm="6" md="4" lg="3">
+                <v-card>
+                    <v-card-title>{{ club.name }}</v-card-title>
+                    <v-card-subtitle>{{ club.description }}</v-card-subtitle>
+                    <v-card-actions>
+                        <v-btn :to="`/club/${club.id}`" color="#00268f" variant="flat" block>VIEW CLUB</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+            <v-col cols="12">
+                <h2>Your joined clubs</h2>
+            </v-col>
+            <v-col v-for="club in clubsJoined" :key="club.id" cols="12" sm="6" md="4" lg="3">
                 <v-card>
                     <v-card-title>{{ club.name }}</v-card-title>
                     <v-card-subtitle>{{ club.description }}</v-card-subtitle>
@@ -38,10 +50,12 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 
+const clubCode = ref();
 const router = useRouter();
-const clubs = ref([]);
+const clubsCreated = ref([]);
+const clubsJoined = ref([]); //fazer tudo em showclubsF 
 
-const show_Clubs = async () => {
+const show_clubs = async () => {
     try {
         const token = localStorage.getItem('token');
 
@@ -56,11 +70,9 @@ const show_Clubs = async () => {
             }
         });
 
-        console.log("Response:", response.data);
-
         if (response.data.success) {
-            clubs.value = response.data.clubs;
-            console.log("Clubs:", clubs.value);
+            clubsCreated.value = response.data.clubsCreated;
+            clubsJoined.value = response.data.clubsJoined;
         }
     } catch (error) {
         console.error('Error searching for clubs:', error);
@@ -82,19 +94,19 @@ const load_club = async (clubCode) => {
             }
         });
 
-        if(response.data.success){
+        if (response.data.success) {
             router.push(`/club/${clubCode}`);
         }
 
         console.log("Response:", response.data);
 
-    }catch(error){
+    } catch (error) {
         console.error('Error loading club:', error);
     }
 }
 
 onMounted(() => {
-    show_Clubs();
+    show_clubs();
 });
 
 </script>
