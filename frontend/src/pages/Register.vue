@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="register-bg">
     <v-container class="v-card-container register-container">
       <v-row>
         <v-col cols="12" md="8" lg="6" class="mx-auto">
@@ -106,7 +106,16 @@ const register = async () => {
 </script>
 
 <style scoped>
+.register-bg {
+  background-image: url("/Images/Register/background.png");
+  background-size: cover; 
+  background-repeat: repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+  width: 100%;
+}
+
 .register-container {
-  margin-top: 15vh;
+  padding-top: 15vh;
 }
 </style>

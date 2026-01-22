@@ -10,12 +10,16 @@
                     Create clubs
                 </v-btn>
             </v-col>
-            <v-col cols="12" class="mt-4 d-flex">
-                <v-text-field placeholder="Search for clubs name" variant="outlined" v-model="clubCode"></v-text-field>
-                <v-btn @click="load_club(clubCode)">Search</v-btn>
+        </v-row>
+
+        <v-row>
+            <v-col cols="12" class="mt-4 d-flex searchBox">
+                <v-text-field  class="searchTextField" placeholder="Search for clubs name" variant="outlined" v-model="clubCode"></v-text-field>
+                <v-btn class="searchBtn" @click="load_club(clubCode)">Search</v-btn>
             </v-col>
         </v-row>
-        <v-row>
+
+        <v-row class="clubSection">
             <v-col cols="12">
                 <h2>Your created clubs</h2>
             </v-col>
@@ -110,3 +114,25 @@ onMounted(() => {
 });
 
 </script>
+
+<style scoped>
+.v-row{
+    margin-bottom: 10px;
+}
+
+.clubSection{
+    background-color: #e7e7e7;
+    border-radius: 8px;
+}
+
+.searchBox {
+    background-color: #e7e7e7;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.searchBox .searchBtn {
+    height: 56px;
+}
+
+</style>

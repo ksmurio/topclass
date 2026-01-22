@@ -46,7 +46,7 @@
 
             <v-col cols="12" md="6" class="text-center">
                 <v-img 
-                    src="/Images/Welcome/welcome.png" 
+                    src="/Images/Login/loginImg.png" 
                     max-width="100%" 
                     contain>
                 </v-img>
@@ -83,3 +83,13 @@ const login = async () => {
     }
 }
 </script>
+
+<style scoped>
+.v-container{
+    margin-top: 10vh;
+}
+
+.v-img {
+    border-radius: 14px;
+}
+</style>
