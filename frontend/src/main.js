@@ -6,6 +6,7 @@ import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import "vuetify/styles";
 import router from "./router";
+import gsap from "gsap";
 
 const vuetify = createVuetify({
   components,
@@ -28,4 +29,10 @@ const vuetify = createVuetify({
   },
 });
 
-createApp(App).use(vuetify).use(router).mount("#app");
+const app = createApp(App);
+
+app.config.globalProperties.$gsap = gsap;
+
+app.use(vuetify);
+app.use(router);
+app.mount("#app");

@@ -16,7 +16,6 @@
   --line-height-normal: 1.5;
 }
 
-/* Aplicar estilos padrão */
 h1 {
   font-size: var(--font-size-h1);
 }
@@ -30,6 +29,7 @@ h3 {
 }
 
 body {
+  font-family: "TASA Explorer", sans-serif;
   font-size: var(--font-size-body);
   color: var(--color-text);
   line-height: var(--line-height-normal);
