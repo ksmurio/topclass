@@ -4,7 +4,7 @@ import sequelize from '../config/db.js';
 
 const Club = sequelize.define("Club", {
   id: {
-    type: DataTypes.UUID,
+    type: DataTypes.CHAR(36),
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true
   },
@@ -21,11 +21,11 @@ const Club = sequelize.define("Club", {
     allowNull: false
   },
   creator_id: {
-    type: DataTypes.UUID,
+    type: DataTypes.CHAR(36),
     allowNull: false,
   },
   club_uuid: {
-    type: DataTypes.UUID,
+    type: DataTypes.CHAR(36),
     unique: true,
     defaultValue: DataTypes.UUIDV4 
   },
