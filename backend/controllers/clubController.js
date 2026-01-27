@@ -245,7 +245,7 @@ const deleteMember = async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decoded.id;
     const memberId = req.params.memberId;
-    const clubId = req.params.clubId;
+    const clubId = req.params.id;
 
     const club = await Club.findByPk(clubId);
 

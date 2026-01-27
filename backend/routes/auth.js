@@ -12,7 +12,7 @@ router.get('/clubs', show_clubs);
 router.get('/club/:id', load_club);
 router.post('/club/:id', joinClub);
 router.delete('/club/:id', deleteClub);
-router.delete('/club/:clubId/member/:memberId', deleteMember);
+router.delete('/club/:id/member/:memberId', deleteMember);
 
 
 
