@@ -1,7 +1,6 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/db.js';
 
-
 const Club = sequelize.define("Club", {
   id: {
     type: DataTypes.CHAR(36),
@@ -37,10 +36,14 @@ const Club = sequelize.define("Club", {
     type: DataTypes.BOOLEAN,
     defaultValue: false
   },
+  club_image: {        
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
   created_at: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW
-  }
+  },
 }, {
   tableName: 'clubs',
   timestamps: false, 

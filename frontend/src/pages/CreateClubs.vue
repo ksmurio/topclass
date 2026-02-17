@@ -25,6 +25,9 @@
                                     :rules="[() => !!password || 'Password is required for private clubs']" required>
                                 </v-text-field>
 
+                                <v-file-input label="Club Image" v-model="clubimage" accept="image/*">
+                                </v-file-input> 
+
                                 <v-text-field label="Description" v-model="description">
                                 </v-text-field>
 
@@ -71,6 +74,7 @@ const router = useRouter();
 const clubname = ref('');
 const isPrivate = ref(false);
 const password = ref('');
+const clubimage = ref(null);
 const description = ref('');
 const clubtype = ref('');
 const message = ref('');
@@ -84,17 +88,26 @@ const register = async () => {
             return;
         }
 
-        const res = await axios.post('http://localhost:3000/api/auth/create_club', {
-            clubname: clubname.value,
-            password: password.value,
-            description: description.value,
-            clubtype: clubtype.value,
-            isPrivate: isPrivate.value
-        }, {
-            headers: {
-                'Authorization': `Bearer ${token}`
+        const formData = new FormData();
+        formData.append('clubname', clubname.value);
+        formData.append('password', password.value);
+        formData.append('description', description.value);
+        formData.append('clubtype', clubtype.value);
+        formData.append('isPrivate', isPrivate.value);
+
+        if (clubimage.value) {
+            formData.append('image', clubimage.value);
+        }
+
+        const res = await axios.post(
+            'http://localhost:3000/api/auth/create_club',
+            formData,
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             }
-        });
+        );
 
         if (res.data.success) {
             message.value = 'Club created successfully!';

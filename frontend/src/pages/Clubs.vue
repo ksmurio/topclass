@@ -14,7 +14,8 @@
 
         <v-row>
             <v-col cols="12" class="mt-4 d-flex searchBox">
-                <v-text-field  class="searchTextField" placeholder="Search for clubs name" variant="outlined" v-model="clubCode"></v-text-field>
+                <v-text-field class="searchTextField" placeholder="Search for clubs name" variant="outlined"
+                    v-model="clubCode"></v-text-field>
                 <v-btn class="searchBtn" @click="load_club(clubCode)">Search</v-btn>
             </v-col>
         </v-row>
@@ -26,6 +27,7 @@
 
             <v-col v-for="club in clubsCreated" :key="club.id" cols="12" sm="6" md="4" lg="3">
                 <v-card>
+                    <v-img :src="getImageUrl(club.club_image)" height="150" cover v-if="club.club_image"></v-img>
                     <v-card-title>{{ club.name }}</v-card-title>
                     <v-card-subtitle>{{ club.description }}</v-card-subtitle>
                     <v-card-actions>
@@ -38,6 +40,7 @@
             </v-col>
             <v-col v-for="club in clubsJoined" :key="club.id" cols="12" sm="6" md="4" lg="3">
                 <v-card>
+                    <v-img :src="getImageUrl(club.club_image)" height="150" cover v-if="club.club_image"></v-img>
                     <v-card-title>{{ club.name }}</v-card-title>
                     <v-card-subtitle>{{ club.description }}</v-card-subtitle>
                     <v-card-actions>
@@ -57,7 +60,7 @@ import { useRouter } from 'vue-router';
 const clubCode = ref();
 const router = useRouter();
 const clubsCreated = ref([]);
-const clubsJoined = ref([]); //fazer tudo em showclubsF 
+const clubsJoined = ref([]);  
 
 const show_clubs = async () => {
     try {
@@ -107,7 +110,12 @@ const load_club = async (clubCode) => {
     } catch (error) {
         console.error('Error loading club:', error);
     }
-}
+};
+
+const getImageUrl = (imagePath) => {
+  if (!imagePath) return `http://localhost:3000/uploads/base.jpg`;
+  return `http://localhost:3000/uploads/${imagePath}`;
+};
 
 onMounted(() => {
     show_clubs();
@@ -116,11 +124,11 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.v-row{
+.v-row {
     margin-bottom: 10px;
 }
 
-.clubSection{
+.clubSection {
     background-color: #e7e7e7;
     border-radius: 8px;
 }
@@ -134,5 +142,4 @@ onMounted(() => {
 .searchBox .searchBtn {
     height: 56px;
 }
-
 </style>

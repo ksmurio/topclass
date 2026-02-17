@@ -4,7 +4,11 @@ import jwt from "jsonwebtoken";
 
 const create_club = async (req, res) => {
   const { clubname, password, description, clubtype, isPrivate } = req.body;
+  const clubimage = req.file;
   const token = req.headers.authorization.split(" ")[1];
+
+ 
+  const isPrivateBoolean = isPrivate === 'true' || isPrivate === true;
 
   if (!token) {
     return res
@@ -19,7 +23,7 @@ const create_club = async (req, res) => {
     });
   }
 
-  if (isPrivate && !password) {
+  if (isPrivateBoolean && !password) {
     return res.status(400).json({
       success: false,
       message: "Password required for private clubs",
@@ -42,8 +46,9 @@ const create_club = async (req, res) => {
       description: description,
       club_type: clubtype,
       creator_id: creator_id,
-      password: isPrivate ? password : null,
-      is_private: isPrivate || false,
+      password: isPrivateBoolean ? password : null,
+      is_private: isPrivateBoolean,
+      club_image: clubimage ? clubimage.filename : null
     });
 
     await club.addMember(user);
@@ -62,6 +67,7 @@ const create_club = async (req, res) => {
   }
 };
 
+
 const deleteClub = async (req, res) => {
   try {
     const clubId = req.params.id;
@@ -79,6 +85,12 @@ const deleteClub = async (req, res) => {
         .json({ success: false, message: "User not found" });
     }
 
+    if (!club) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Club not found" });
+    }
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decoded.id;
     const club = await Club.findByPk(clubId);
@@ -88,12 +100,6 @@ const deleteClub = async (req, res) => {
         success: false,
         message: "Only the creator can delete this club",
       });
-    }
-
-    if (!club) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Club not found" });
     }
 
     await club.destroy();
@@ -246,7 +252,6 @@ const deleteMember = async (req, res) => {
     const userId = decoded.id;
     const memberId = req.params.memberId;
     const clubId = req.params.id;
-
     const club = await Club.findByPk(clubId);
 
     if (!club) {
