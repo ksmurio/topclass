@@ -27,8 +27,11 @@
                 </v-text-field>
               </v-card-text>
 
-              <v-file-input v-model="profile_picture" label="Profile Picture" accept="image/*" @change="handleFile" prepend-icon="mdi-camera">
-              </v-file-input>
+              <v-card-text>
+                <v-file-input v-model="profile_picture" label="Profile Picture" accept="image/*" @change="handleFile" prepend-icon="">
+                  
+                </v-file-input>
+              </v-card-text>
 
               <v-card-actions class="d-flex flex-column justify-center">
                 <v-btn size="large" type="submit" color="blue-darken-4" class="text-white" variant="flat">

@@ -1,4 +1,5 @@
 import { createApp } from "vue";
+import { createPinia } from 'pinia'
 import "./style.css";
 import App from "./App.vue";
 import { createVuetify } from "vuetify";
@@ -33,6 +34,7 @@ const app = createApp(App);
 
 app.config.globalProperties.$gsap = gsap;
 
+app.use(createPinia())
 app.use(vuetify);
 app.use(router);
 app.mount("#app");

@@ -167,12 +167,12 @@ const load_club = async (req, res) => {
         {
           model: User,
           as: "creator",
-          attributes: ["id", "username", "full_name", "email"],
+          attributes: ["id", "username", "name", "email"],
         },
         {
           model: User,
           as: "members",
-          attributes: ["id", "username", "full_name"],
+          attributes: ["id", "username", "name"],
           through: { attributes: [] },
         },
       ],
