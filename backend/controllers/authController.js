@@ -1,15 +1,12 @@
-// backend/controllers/authController.js
 import User from '../models/user.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { getTimestampIdentifier } from 'vuetify/lib/labs/VCalendar/util/timestamp.mjs';
 
-
-// Register user
 export const register = async (req, res) => {
-  const { full_name, username, email, password } = req.body;
+  const { name, username, email, password } = req.body;
+  const profile_picture = req.file ? req.file.filename : null;
 
-  if (!full_name || !username || !email || !password) {
+  if (!name || !username || !email || !password) {
     return res.status(400).json({ success: false, message: 'Please fill all fields' });
   }
 
@@ -19,7 +16,7 @@ export const register = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Email already registered' });
     }
 
-    const newUser = await User.create({ full_name, username, email, password });
+    const newUser = await User.create({ name, username, email, password, profile_picture });
     res.status(201).json({ success: true, message: 'User created successfully', user: newUser });
 
   } catch (error) {
@@ -27,8 +24,6 @@ export const register = async (req, res) => {
     res.status(500).json({ success: false, message: 'Please check the inputs' });
   }
 };
-
-// Login user
 
 export const login = async(req, res) =>{
   const  { email, password } = req.body;

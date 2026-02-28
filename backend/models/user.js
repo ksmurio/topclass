@@ -8,7 +8,7 @@ const User = sequelize.define('User', {
     primaryKey: true,
     defaultValue: DataTypes.UUIDV4
   },
-  full_name: {
+  name: {
     type: DataTypes.STRING(255),
     allowNull: false
   },
@@ -30,6 +30,10 @@ const User = sequelize.define('User', {
   global_average: {
     type: DataTypes.DECIMAL(4, 2),
     defaultValue: 0
+  },
+  profile_picture: {
+    type: DataTypes.STRING(255),
+    allowNull: true
   },
   can_create_battle: {
     type: DataTypes.TINYINT(1),
