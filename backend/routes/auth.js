@@ -17,7 +17,7 @@ const upload = multer({ storage: storage });
 
 const router = express.Router();
 
-router.post('/register', register);
+router.post('/register', upload.single('profile_picture'), register);
 router.post('/login', login);
 router.post('/create_club', upload.single('image') ,create_club);
 router.get('/clubs', show_clubs);

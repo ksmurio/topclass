@@ -11,26 +11,23 @@
                 </v-card-title>
                 <v-card-subtitle class="mb-5">Start your journey</v-card-subtitle>
 
-                <v-text-field label="Name" v-model="name" :rules="[() => !!name || 'This field is required']" required>
-                </v-text-field>
+                <v-text-field label="Name" v-model="name" :rules="[() => !!name || 'This field is required']" required />
 
                 <v-text-field label="Username" v-model="username"
-                  :rules="[() => !!username || 'This field is required']" required>
-                </v-text-field>
+                  :rules="[() => !!username || 'This field is required']" required/>
+
+
+                <v-text-field label="School year" v-model="school_year" :rules="[() => !!school_year || 'This field is required']" required/>
 
                 <v-text-field label="Email" v-model="email" :rules="[() => !!email || 'This field is required']"
-                  required>
-                </v-text-field>
+                  required />
 
                 <v-text-field label="Password" v-model="password"
-                  :rules="[() => !!password || 'This field is required']" required>
-                </v-text-field>
+                  :rules="[() => !!password || 'This field is required']" required/>
               </v-card-text>
 
               <v-card-text>
-                <v-file-input v-model="profile_picture" label="Profile Picture" accept="image/*" @change="handleFile" prepend-icon="">
-                  
-                </v-file-input>
+                <v-file-input v-model="profile_picture" label="Profile Picture" accept="image/*" @change="handleFile" prepend-icon=""/>
               </v-card-text>
 
               <v-card-actions class="d-flex flex-column justify-center">
@@ -58,6 +55,7 @@ const router = useRouter();
 
 const name = ref('');
 const username = ref('');
+const school_year = ref('');
 const email = ref('');
 const password = ref('');
 const profile_picture = ref(null);  
@@ -67,6 +65,7 @@ const register = async () => {
   const formData = new FormData();
   formData.append('name', name.value);
   formData.append('username', username.value);
+  formData.append('school_year', school_year.value);
   formData.append('email', email.value);
   formData.append('password', password.value);
 

@@ -38,7 +38,15 @@ const User = sequelize.define('User', {
   can_create_battle: {
     type: DataTypes.TINYINT(1),
     defaultValue: 0
+  },
+  school_year: {
+  type: DataTypes.TINYINT.UNSIGNED,
+  allowNull: true,
+  validate: {
+    min: 1,
+    max: 12
   }
+}
 }, {
   tableName: 'users',
   timestamps: false, 
