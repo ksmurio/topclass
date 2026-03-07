@@ -1,53 +1,75 @@
-import { DataTypes } from 'sequelize';
-import sequelize from '../config/db.js';
+import { DataTypes } from "sequelize";
+import sequelize from "../config/db.js";
 
-const Club = sequelize.define("Club", {
-  id: {
-    type: DataTypes.CHAR(36),
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true
+const Club = sequelize.define(
+  "Club",
+  {
+    id: {
+      type: DataTypes.CHAR(36),
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
+    name: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    club_image: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+    },
+    club_type: {
+      type: DataTypes.ENUM(
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11", 
+        "12",
+        "13",
+      ),
+      allowNull: false,
+    },
+    creator_id: {
+      type: DataTypes.CHAR(36),
+      allowNull: false,
+    },
+    club_uuid: {
+      type: DataTypes.CHAR(36),
+      unique: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    password: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+    },
+    is_private: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    club_image: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
   },
-  name: {
-    type: DataTypes.STRING(255),
-    allowNull: false
+  {
+    tableName: "clubs",
+    timestamps: false,
+    underscored: true,
   },
-  description: {
-    type: DataTypes.TEXT,
-    allowNull: true
-  },
-  club_type: {
-    type: DataTypes.ENUM('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'),
-    allowNull: false
-  },
-  creator_id: {
-    type: DataTypes.CHAR(36),
-    allowNull: false,
-  },
-  club_uuid: {
-    type: DataTypes.CHAR(36),
-    unique: true,
-    defaultValue: DataTypes.UUIDV4 
-  },
-  password: {
-    type: DataTypes.STRING(255),
-    allowNull: true
-  },
-  is_private: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
-  },
-  club_image: {        
-    type: DataTypes.STRING(255),
-    allowNull: true
-  },
-  created_at: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW
-  },
-}, {
-  tableName: 'clubs',
-  timestamps: false, 
-  underscored: true
-});
+);
 
 export default Club;
