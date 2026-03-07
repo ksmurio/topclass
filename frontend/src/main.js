@@ -1,5 +1,6 @@
 import { createApp } from "vue";
-import { createPinia } from 'pinia'
+import { createPinia } from 'pinia';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import "./style.css";
 import App from "./App.vue";
 import { createVuetify } from "vuetify";
@@ -8,10 +9,14 @@ import * as directives from "vuetify/directives";
 import "vuetify/styles";
 import router from "./router";
 import gsap from "gsap";
+import '@mdi/font/css/materialdesignicons.css';
 
 const vuetify = createVuetify({
   components,
   directives,
+    icons: {
+    defaultSet: 'mdi',
+  },
   theme: {
     defaultTheme: "light",
     themes: {
@@ -30,11 +35,12 @@ const vuetify = createVuetify({
   },
 });
 
+const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate);
+
 const app = createApp(App);
-
 app.config.globalProperties.$gsap = gsap;
-
-app.use(createPinia())
+app.use(pinia);
 app.use(vuetify);
 app.use(router);
 app.mount("#app");

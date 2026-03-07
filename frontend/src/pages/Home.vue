@@ -8,7 +8,7 @@
                         <p>Here is the summary of your progress and your activities this week.</p>
                     </v-col>  
                     <v-col cols="3">
-                        <v-btn color="#00268f" :to="{ name: 'AddAverage'}">Add academic average</v-btn>
+                        <v-btn color="#00268f" :to="{ name: 'AddGrade'}">Add academic average</v-btn>
                     </v-col>  
                 </v-row>
                 <v-row justify="center">

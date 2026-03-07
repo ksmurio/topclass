@@ -34,7 +34,7 @@
 <script>
 </script>
 
-<style defined>
+<style scoped>
 
 .welcome-page{
     margin-top: 10vh;
