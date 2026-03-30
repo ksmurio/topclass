@@ -1,32 +1,67 @@
-import User from './user.js';
-import Club from './club.js';
+import User from "./user.js";
+import Club from "./club.js";
+import Battle from "./battle.js";
+import SubjectGrade from "./subject_grades.js";
+import Subject from "./subject.js";
 
 const initAssociations = () => {
   User.belongsToMany(Club, {
-    through: 'user_clubs',
-    foreignKey: 'user_id',
-    otherKey: 'club_id',
-    as: 'joinedClubs', 
+    through: "user_clubs",
+    foreignKey: "user_id",
+    otherKey: "club_id",
+    as: "joinedClubs",
     timestamps: false,
   });
-
   Club.belongsToMany(User, {
-    through: 'user_clubs',
-    foreignKey: 'club_id',
-    otherKey: 'user_id',
-    as: 'members',
+    through: "user_clubs",
+    foreignKey: "club_id",
+    otherKey: "user_id",
+    as: "members",
     timestamps: false,
   });
-
   Club.belongsTo(User, {
-    foreignKey: 'creator_id',
-    as: 'creator'
+    foreignKey: "creator_id",
+    as: "creator",
+  });
+  User.hasMany(Club, {
+    foreignKey: "creator_id",
+    as: "createdClubs",
   });
 
-  User.hasMany(Club, {
-    foreignKey: 'creator_id',
-    as: 'createdClubs' 
+  Battle.belongsTo(Club, {
+    foreignKey: "club_id",
+    as: "club",
+  });
+
+  Club.hasMany(Battle, {
+    foreignKey: "club_id",
+    as: "battles",
+  });
+
+  Club.belongsTo(Subject, {
+    foreignKey: "club_type",
+    as: "subject",
+  });
+
+  Battle.belongsTo(User, {
+    foreignKey: "creator_id",
+    as: "creator",
+  });
+
+  User.hasMany(Battle, {
+    foreignKey: "creator_id",
+    as: "createdBattles",
+  });
+
+  SubjectGrade.belongsTo(Subject, {
+    foreignKey: "subject_id",
+    as: "subject",
+  });
+
+  Subject.hasMany(SubjectGrade, {
+    foreignKey: "subject_id",
+    as: "grades",
   });
 };
 
-export {initAssociations};
+export { initAssociations };

@@ -2,7 +2,7 @@ import User from '../models/user.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-export const register = async (req, res) => {
+const register = async (req, res) => {
   const { name, username,school_year, email, password } = req.body;
   const profile_picture = req.file ? req.file.filename : null;
 
@@ -25,7 +25,7 @@ export const register = async (req, res) => {
   }
 };
 
-export const login = async(req, res) =>{
+const login = async(req, res) =>{
   const  { email, password } = req.body;
 
   if(!email || !password){
@@ -55,4 +55,15 @@ export const login = async(req, res) =>{
   }
 }
 
+const getUser = async (req, res) => {
+  try {
+    const user = await User.findOne({ where: { id: req.user.id } });
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+    return res.status(200).json({ success: true, user });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
 
+export {register, login, getUser};

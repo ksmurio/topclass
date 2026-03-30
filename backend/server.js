@@ -19,7 +19,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Servir arquivos estáticos da pasta uploads
+
 app.use('/uploads', express.static('uploads'));
 
 app.use((req, res, next) => {

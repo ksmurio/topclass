@@ -1,34 +1,310 @@
 <template>
-    <v-container>
-        <v-row>
-            <v-col cols="10">
-                <v-row>
-                    <v-col cols="9">
-                        <h1>Welcome</h1>
-                        <p>Here is the summary of your progress and your activities this week.</p>
-                    </v-col>  
-                    <v-col cols="3">
-                        <v-btn color="#00268f" :to="{ name: 'AddGrade'}">Add academic average</v-btn>
-                    </v-col>  
-                </v-row>
-                <v-row justify="center">
-                    <v-date-picker show-adjacent-months elevation="24" width="700" color="#00268f"
-                        :max="new Date()"></v-date-picker>
-                </v-row>
-            </v-col>
-            <v-col cols="2">
+  <div class="page-bg">
+    <v-container class="page-container">
+      <v-row align="center" class="mb-6">
+        <v-col cols="12" sm="8">
+          <h1 class="page-title">Welcome</h1>
+          <p class="page-sub">Here is the summary of your progress and your activities this week.</p>
+        </v-col>
+        <v-col cols="12" sm="4" class="d-flex justify-end">
+          <v-btn color="#1A73E8" variant="flat" :to="{ name: 'AddGrade' }" class="action-btn">
+            <v-icon start>mdi-plus</v-icon> Add Academic Average
+          </v-btn>
+        </v-col>
+      </v-row>
 
-            </v-col>
+      <div class="section-block mb-6">
+        <div class="section-header mb-4">
+          <v-icon color="#1A73E8" size="20">mdi-chart-bar</v-icon>
+          <h2 class="section-title">Average per Subject</h2>
+        </div>
+        <div v-if="chartGrades.length === 0" class="empty-row">No grades found</div>
+        <div v-if="chartGrades.length > 0">
+          <canvas ref="chartRef" height="120"></canvas>
+        </div>
+      </div>
+
+      <div class="section-block mb-6">
+        <div class="section-header mb-4">
+          <v-icon color="#1A73E8" size="20">mdi-calendar</v-icon>
+          <h2 class="section-title">Battle Calendar</h2>
+        </div>
+        <v-row justify="center">
+          <v-col cols="12" md="8" lg="6" class="d-flex justify-center">
+            <v-date-picker show-adjacent-months elevation="0" width="100%" color="#1A73E8" class="calendar-picker"
+              v-model="selectedDate">
+              <template #day="{ item, props }">
+                <div class="day-wrapper">
+                  <v-btn v-bind="props" />
+                  <span v-if="isBattleDate(item.date)" class="battle-dot" />
+                </div>
+              </template>
+            </v-date-picker>
+          </v-col>
         </v-row>
+
+        <div v-if="selectedBattles.length > 0" class="battles-on-day mt-4">
+          <div class="section-header mb-3">
+            <v-icon color="#1A73E8" size="16">mdi-sword-cross</v-icon>
+            <span class="section-title" style="font-size:0.9rem">
+              Battles em {{ formatSelectedDate }}
+            </span>
+          </div>
+          <div v-for="battle in selectedBattles" :key="battle.id" class="battle-item">
+            <div class="battle-info">
+              <span class="battle-club">{{ battle.club?.name }}</span>
+              <span class="battle-time">
+                <v-icon size="13" color="#5f6b7a">mdi-clock-outline</v-icon>
+                {{ new Date(battle.date).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' }) }}
+              </span>
+            </div>
+            <span :class="'status-badge status-' + battle.status">{{ battle.status }}</span>
+          </div>
+        </div>
+
+        <div v-else-if="selectedDate" class="empty-row">
+          Nenhuma battle neste dia
+        </div>
+      </div>
+
     </v-container>
+  </div>
 </template>
 
-<script>
-import {ref, onMounted } from 'vue';
+<script setup>
+import { ref, onMounted, nextTick, computed } from 'vue';
+import axios from 'axios';
+import Chart from 'chart.js/auto';
 
+const chartRef = ref(null);
+const chartGrades = ref([]);
+const battles = ref([]);
+const selectedDate = ref(null);
+let maxHeight = 0;
 
-onMounted(() =>{
-    
-})
+const renderChart = (maxHeight) => {
+  if (!chartRef.value) return;
+  if (chartRef.value._chartInstance) {
+    chartRef.value._chartInstance.destroy();
+  }
+  chartRef.value._chartInstance = new Chart(chartRef.value, {
+    type: 'bar',
+    data: {
+      labels: chartGrades.value.map(g => g.subject),
+      datasets: [{
+        label: 'Average',
+        data: chartGrades.value.map(g => parseFloat(g.average)),
+        backgroundColor: '#1A73E8',
+        borderRadius: 8,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { min: 0, max: maxHeight, grid: { color: '#f0f2f5' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+};
 
+const loadChart = async () => {
+  try {
+    const token = localStorage.getItem('token');
+
+    const user = await axios.get('http://localhost:3000/api/auth/user', {
+      headers: { Authorization: `Bearer ${token}` }
+    }).then(res => res.data.user).catch(() => null);
+    if(parseInt(user?.school_year)<=5){
+      maxHeight = 5;
+    }else{
+      maxHeight = 20;
+    }
+
+    const res = await axios.get('http://localhost:3000/api/auth/grades/chart', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    if (res.data.success) {
+      chartGrades.value = res.data.grades;
+      await nextTick();
+      renderChart(maxHeight);
+    }
+  } catch (e) {
+    console.error('Error loading chart:', e);
+  }
+};
+
+const loadBattles = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    const res = await axios.get('http://localhost:3000/api/auth/battles', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (res.data.success) battles.value = res.data.battles;
+  } catch (e) {
+    console.error('Error loading battles:', e);
+  }
+};
+
+const isBattleDate = (date) => {
+  if (!date) return false;
+  const d = new Date(date).toDateString();
+  return battles.value.some(b => new Date(b.date).toDateString() === d);
+};
+
+const selectedBattles = computed(() => {
+  if (!selectedDate.value) return [];
+  const selected = new Date(selectedDate.value).toDateString();
+  return battles.value.filter(b => new Date(b.date).toDateString() === selected);
+});
+
+const formatSelectedDate = computed(() => {
+  if (!selectedDate.value) return '';
+  return new Date(selectedDate.value).toLocaleDateString('pt-PT', {
+    day: 'numeric', month: 'long', year: 'numeric'
+  });
+});
+
+onMounted(() => {
+  loadChart();
+  loadBattles();
+});
 </script>
+
+<style scoped>
+.page-bg {
+  background-color: #f0f2f5;
+  min-height: 100vh;
+}
+
+.page-container {
+  padding-top: 4vh;
+}
+
+.page-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 4px;
+}
+
+.page-sub {
+  color: #5f6b7a;
+  font-size: 0.9rem;
+}
+
+.action-btn {
+  border-radius: 8px !important;
+  font-weight: 600;
+  color: white !important;
+  height: 44px !important;
+}
+
+.section-block {
+  background: white;
+  border-radius: 16px;
+  padding: 20px 24px;
+  border: 1px solid #e8edf5;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0;
+}
+
+.empty-row {
+  text-align: center;
+  color: #5f6b7a;
+  padding: 24px;
+  font-size: 0.9rem;
+}
+
+.calendar-picker {
+  border-radius: 16px !important;
+  border: 1px solid #e8edf5 !important;
+  overflow: hidden;
+}
+
+.day-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.battle-dot {
+  position: absolute;
+  bottom: 2px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #1A73E8;
+}
+
+.battles-on-day {
+  border-top: 1px solid #f0f2f5;
+  padding-top: 16px;
+}
+
+.battle-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f8f9fc;
+  margin-bottom: 8px;
+}
+
+.battle-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.battle-club {
+  font-weight: 700;
+  color: #1a1a2e;
+  font-size: 0.9rem;
+}
+
+.battle-time {
+  color: #5f6b7a;
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.status-badge {
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.status-scheduled {
+  background: #fff8e1;
+  color: #f9a825;
+}
+
+.status-ongoing {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-finished {
+  background: #f0f2f5;
+  color: #5f6b7a;
+}
+</style>

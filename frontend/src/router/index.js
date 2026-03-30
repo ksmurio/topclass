@@ -11,7 +11,6 @@ import Profile from "../pages/Profile.vue";
 import Ranking from "../pages/Ranking.vue";
 import Clubs from "../pages/Clubs.vue";
 import CreateClubs from "../pages/CreateClubs.vue";
-import Logout from "../pages/Logout.vue";
 import club from "../pages/Club.vue";
 import AddGrade from "../pages/AddGrade.vue";
 
@@ -27,7 +26,6 @@ const routes = [
     {path: '/ranking', name: 'Ranking', component: Ranking},
     {path: '/clubs', name: 'Clubs', component: Clubs},
     {path: '/createclubs', name: 'CreateClubs', component: CreateClubs},
-    {path: '/logout', name: 'Logout', component: Logout},
     {path: '/club/:id', name: 'club', component: club},
     {path: '/AddGrade', name: 'AddGrade', component: AddGrade},
 ]
