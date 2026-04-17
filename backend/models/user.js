@@ -40,16 +40,21 @@ const User = sequelize.define('User', {
     defaultValue: 0
   },
   school_year: {
-  type: DataTypes.TINYINT.UNSIGNED,
-  allowNull: true,
-  validate: {
-    min: 1,
-    max: 12
+    type: DataTypes.TINYINT.UNSIGNED,
+    allowNull: true,
+    validate: { min: 1, max: 12 }
+  },
+  is_verified: {
+    type: DataTypes.TINYINT(1),
+    defaultValue: 0
+  },
+  verification_code: {
+    type: DataTypes.STRING(6),
+    allowNull: true
   }
-}
 }, {
   tableName: 'users',
-  timestamps: false, 
+  timestamps: false,
   hooks: {
     beforeCreate: async (user) => {
       user.password = await bcrypt.hash(user.password, 10);

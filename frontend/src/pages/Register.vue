@@ -74,14 +74,7 @@ const register = async () => {
     });
 
     if (res.data.success) {
-      message.value = res.data.message;
-      setTimeout(() => {
-        router.push('/');
-      }, 2000);
-      name.value = '';
-      username.value = '';
-      email.value = '';
-      password.value = '';
+      router.push(`/confirmar-email?userId=${res.data.userId}`);
     }
   } catch (error) {
     if (error.response) {

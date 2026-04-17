@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 });
 
 
-app.use('/api/auth', authRoutes); //verificar isto
+app.use('/api/auth', authRoutes);
 
 const startServer = async () => {
   try {
