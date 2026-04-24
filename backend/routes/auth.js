@@ -7,6 +7,7 @@ import { getSubjects } from '../controllers/subjectController.js';
 import { addGrade, getUserGradesChart } from '../controllers/subject_gradesController.js';
 import { verifyToken } from '../middleware/authmiddleware.js';
 import { createBattle, getUserBattles } from '../controllers/battleController.js';
+import { saveNotes, getNotes } from '../controllers/notesController.js';
 
 const storage = multer.diskStorage({ // diskStorage significa que os ficheiros vão para o disco (pasta do servidor)
     destination: (req, file, cb) => {
@@ -45,5 +46,9 @@ router.get('/getSubjects', verifyToken, getSubjects);
 router.get('/subjects', get_subjects);
 router.post('/addGrade', verifyToken, addGrade);
 router.get('/grades/chart', verifyToken, getUserGradesChart);
+
+router.post('/saveNotes', verifyToken, saveNotes);
+router.get('/getNotes', verifyToken, getNotes);
+
 
 export default router;
