@@ -12,20 +12,38 @@ const register = async (req, res) => {
     return res.status(400).json({ success: false, message: 'Please fill all fields' });
   }
 
+  // Parse and validate school_year — req.body values are strings; coerce before saving
+  const parsedSchoolYear = parseInt(school_year, 10);
+  if (isNaN(parsedSchoolYear) || parsedSchoolYear < 1 || parsedSchoolYear > 12) {
+    return res.status(400).json({
+      success: false,
+      message: 'school_year must be a number between 1 and 12'
+    });
+  }
+
   try {
-    const existingUser = await User.findOne({ where: { email } });
-    if (existingUser) {
+    const existingEmail = await User.findOne({ where: { email } });
+    if (existingEmail) {
       return res.status(400).json({ success: false, message: 'Email already registered' });
     }
 
+    const existingUsername = await User.findOne({ where: { username } });
+    if (existingUsername) {
+      return res.status(400).json({ success: false, message: 'Username already taken' });
+    }
 
     const verification_code = Math.floor(100000 + Math.random() * 900000).toString();
 
     const newUser = await User.create({
-      name, username, school_year, email, password, profile_picture, verification_code
+      name, username, school_year: parsedSchoolYear, email, password, profile_picture, verification_code
     });
 
-    await sendVerificationEmail(email, verification_code);
+    try {
+      await sendVerificationEmail(email, verification_code);
+    } catch (emailError) {
+      console.error('Failed to send verification email:', emailError);
+      // User was created — don't fail the request, client can request resend
+    }
 
     res.status(201).json({
       success: true,

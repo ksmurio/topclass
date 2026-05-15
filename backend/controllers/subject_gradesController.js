@@ -39,7 +39,7 @@ const addGrade = async (req, res) => {
   }
 };
 
-const getUserGradesChart = async (req, res) => {
+const getUserAverageGradesChart = async (req, res) => {
   try {
     const userId = req.user.id;
     const grades = await SubjectGrade.findAll({
@@ -72,4 +72,32 @@ const getUserGradesChart = async (req, res) => {
   }
 };
 
-export { addGrade, getUserGradesChart };
+const getUserGradesChart = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { subjectId } = req.params;
+
+    const grades = await SubjectGrade.findAll({
+      where: {
+        user_id: userId,
+        subject_id: subjectId
+      },
+      order: [['createdAt', 'ASC']],
+      attributes: ['grade', 'createdAt']
+    });
+
+    return res.status(200).json({
+      success: true,
+      grades
+    });
+
+  } catch (error) {
+    console.error('Error fetching grades:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+}
+
+export { addGrade, getUserAverageGradesChart, getUserGradesChart};

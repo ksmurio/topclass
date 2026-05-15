@@ -13,14 +13,15 @@
         </v-col>
       </v-row>
 
+      
       <div class="section-block mb-6">
         <div class="section-header mb-4">
           <v-icon color="#1A73E8" size="20">mdi-chart-bar</v-icon>
-          <h2 class="section-title">Average per Subject</h2>
+          <h2 class="section-title">Average per Grade</h2>
         </div>
         <div v-if="chartGrades.length === 0" class="empty-row">No grades found</div>
         <div v-if="chartGrades.length > 0">
-          <canvas ref="chartRef" height="120"></canvas>
+          <canvas ref="AverageGradeChartRef" height="120"></canvas>
         </div>
       </div>
 
@@ -61,9 +62,20 @@
             <span :class="'status-badge status-' + battle.status">{{ battle.status }}</span>
           </div>
         </div>
-
         <div v-else-if="selectedDate" class="empty-row">
           Nenhuma battle neste dia
+        </div>
+      </div>
+
+      
+      <div class="section-block mb-6">
+        <div class="section-header mb-4">
+          <v-icon color="#1A73E8" size="20">mdi-chart-bar</v-icon>
+          <h2 class="section-title">Average per Subject</h2>
+        </div>
+        <div v-if="chartGrades.length === 0" class="empty-row">No grades found</div>
+        <div v-if="chartGrades.length > 0">
+          <canvas ref="GradeChartRef" height="120"></canvas>
         </div>
       </div>
 
@@ -76,18 +88,30 @@ import { ref, onMounted, nextTick, computed } from 'vue';
 import axios from 'axios';
 import Chart from 'chart.js/auto';
 
-const chartRef = ref(null);
+const GradeChartRef = ref(null);
+const AverageGradeChartRef = ref(null);
+
 const chartGrades = ref([]);
+const gradeProgress = ref([]);
+
 const battles = ref([]);
 const selectedDate = ref(null);
+
+const selectedSubject = ref(null);
+
 let maxHeight = 0;
 
-const renderChart = (maxHeight) => {
-  if (!chartRef.value) return;
-  if (chartRef.value._chartInstance) {
-    chartRef.value._chartInstance.destroy();
+let averageChartInstance = null;
+let gradeChartInstance = null;
+
+const renderAverageChart = (maxHeight) => {
+  if (!AverageGradeChartRef.value) return;
+
+  if (averageChartInstance) {
+    averageChartInstance.destroy();
   }
-  chartRef.value._chartInstance = new Chart(chartRef.value, {
+
+  averageChartInstance = new Chart(AverageGradeChartRef.value, {
     type: 'bar',
     data: {
       labels: chartGrades.value.map(g => g.subject),
@@ -100,25 +124,87 @@ const renderChart = (maxHeight) => {
     },
     options: {
       responsive: true,
-      plugins: { legend: { display: false } },
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
       scales: {
-        y: { min: 0, max: maxHeight, grid: { color: '#f0f2f5' } },
-        x: { grid: { display: false } }
+        y: {
+          min: 0,
+          max: maxHeight,
+          grid: {
+            color: '#f0f2f5'
+          }
+        },
+        x: {
+          grid: {
+            display: false
+          }
+        }
       }
     }
   });
 };
 
-const loadChart = async () => {
+const renderGradeChart = (maxHeight) => {
+  if (!GradeChartRef.value) return;
+
+  if (gradeChartInstance) {
+    gradeChartInstance.destroy();
+  }
+
+  gradeChartInstance = new Chart(GradeChartRef.value, {
+    type: 'line',
+    data: {
+      labels: gradeProgress.value.map(g => g.date),
+      datasets: [{
+        label: 'Grades',
+        data: gradeProgress.value.map(g => parseFloat(g.grade)),
+        borderColor: '#10B981',
+        backgroundColor: '#10B98133',
+        tension: 0.4,
+        fill: true,
+        pointRadius: 5,
+        pointBackgroundColor: '#10B981'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        y: {
+          min: 0,
+          max: maxHeight,
+          grid: {
+            color: '#f0f2f5'
+          }
+        },
+        x: {
+          grid: {
+            display: false
+          }
+        }
+      }
+    }
+  });
+};
+
+const loadAverageGradeChart = async () => {
   try {
     const token = localStorage.getItem('token');
 
     const user = await axios.get('http://localhost:3000/api/auth/user', {
       headers: { Authorization: `Bearer ${token}` }
     }).then(res => res.data.user).catch(() => null);
-    if(parseInt(user?.school_year)<=5){
+
+    if (parseInt(user?.school_year) <= 5) {
       maxHeight = 5;
-    }else{
+    } else {
       maxHeight = 20;
     }
 
@@ -127,21 +213,50 @@ const loadChart = async () => {
     });
 
     if (res.data.success) {
-      chartGrades.value = res.data.grades;
+       chartGrades.value = res.data.grades;
+
       await nextTick();
-      renderChart(maxHeight);
+
+      renderAverageChart(maxHeight);
     }
   } catch (e) {
     console.error('Error loading chart:', e);
   }
 };
 
+const loadGradeProgressChart = async (subjectId) => {
+  try {
+    const token = localStorage.getItem('token');
+
+    const res = await axios.get(`http://localhost:3000/api/auth/grades/progress/${subjectId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (res.data.success) {
+      gradeProgress.value = res.data.grades.map(g => ({
+        grade: g.grade,
+        date: new Date(g.date).toLocaleDateString('pt-PT')
+      }));
+
+      await nextTick();
+
+      renderGradeChart(maxHeight);
+    }
+  } catch (e) {
+    console.error('Error loading grade progress:', e);
+  }
+};
+
 const loadBattles = async () => {
   try {
     const token = localStorage.getItem('token');
+
     const res = await axios.get('http://localhost:3000/api/auth/battles', {
       headers: { Authorization: `Bearer ${token}` }
     });
+
     if (res.data.success) battles.value = res.data.battles;
   } catch (e) {
     console.error('Error loading battles:', e);
@@ -163,12 +278,14 @@ const selectedBattles = computed(() => {
 const formatSelectedDate = computed(() => {
   if (!selectedDate.value) return '';
   return new Date(selectedDate.value).toLocaleDateString('pt-PT', {
-    day: 'numeric', month: 'long', year: 'numeric'
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
   });
 });
 
 onMounted(() => {
-  loadChart();
+  loadAverageGradeChart();
   loadBattles();
 });
 </script>
